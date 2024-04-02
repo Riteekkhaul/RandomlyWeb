@@ -1,0 +1,73 @@
+.homepage{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0; /* Remove default body margin */
+  width: 100%;
+  height: 100%;
+  background-image: url('../images/back.jpg'); /* Replace 'your-photo-url.jpg' with the URL of your photo */
+  background-size: cover; /* Cover the entire background */
+  background-position: center; /* Center the background */
+  background-repeat: no-repeat; /* Do not repeat the background */
+}
+
+.welcome{
+  color: white;
+}
+.userInputCon{
+  display: flex;
+}
+.userInputCon label{
+ margin: 10px;
+ color: white;
+}
+.selectStyle{
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 200px;
+  margin-bottom: 20px;
+}
+.button-container{
+  display: flex;
+  justify-content: center;
+}
+.btntext{
+  margin: 10px 10px;
+  font-weight: bold;
+}
+.text-chat-button,
+.video-chat-button {
+  display: flex;
+  padding: 10px 20px;
+  margin: 10px;
+  border: 2px solid #007bff; /* blue border */
+  border-radius: 5px;
+  background-color:  #007bff; /* white background */
+  color:  #ffffff; /* blue text color */
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.text-chat-button:hover,
+.video-chat-button:hover {
+  background-color: #ffffff ;/* blue background on hover */
+  color:#007bff; /* white text color on hover */
+}
+
+.marqueeStyle{
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #4864fd;
+  background-color: orange;
+  padding: 10px,
+}
+.serviceSection{
+  height: 150px;
+}
+.footer{
+  height: 100px;
+}

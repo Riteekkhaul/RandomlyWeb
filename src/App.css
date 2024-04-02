@@ -1,0 +1,198 @@
+
+/* ChatBox.css */
+.container {
+  display: flex;
+  flex-direction: row;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+}
+.row h5{
+  margin-top: 0px;
+}
+.row button{
+  width: 100px;
+  height: 20px;
+  margin: 0px 10px;
+}
+.left {
+  width: 50%;
+}
+.chatSection{
+  width: 65%;
+  padding-top: 20px;
+  margin: 5px 10px 10px 10px;
+}
+.right{
+  width: 50%;
+  padding-top: 20px;
+}
+
+.stream-container {
+  margin-left: 10px; /* Add margin for spacing */
+}
+
+.video-stream {
+  border-radius: 8px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
+.local-stream {
+  position: absolute;
+  border-radius: 8px;
+  left:475px;
+  bottom:40px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1; /* Ensure local stream is above remote stream */
+}
+
+.video-stream:hover {
+  transform: scale(1.02);
+}
+
+.chat-container {
+  width: 95%;
+  margin: auto;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.chat-messages {
+  height: 400px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.sent {
+  background-color: #DCF8C6;
+  align-self: flex-end;
+}
+
+.received {
+  background-color: #EFEFEF;
+}
+
+.message-text {
+  margin: 0;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.input-text {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.queryInput{
+  width: 220px;
+  margin: 10px 10px 0px 20px;
+  height: 30px;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid black;
+  padding-left: 5px;
+}
+.searchbtn{
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 0px 5px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.crossbtn{
+  border-radius: 10px;
+  color: rgb(10, 10, 10);
+  font-weight: bold;
+  font-size: 34px;
+  border: none;
+  margin-left: 5px;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+}
+.gifModal{
+  position: absolute;
+  width: 400px;
+  right: 30px;
+  bottom: 120px;
+  background-color: rgb(223, 243, 243);
+  border-radius: 10px;
+}
+.gifbtn{
+  padding: 10px;
+  border-radius: 50%;
+  margin-right: 5PX;
+}
+.gifbtn:hover{
+  cursor: pointer;
+}
+.gif{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 90%;
+    height: 250px;
+    overflow-y: auto;
+    border-color: #007bff;
+    border-radius: 10px;
+    border-width: 10px;
+    padding: 10px;
+    background-color: rgb(223, 243, 243);
+    margin: 5px 10px;
+}
+.gif__image{
+  cursor: pointer;
+}
+.send-button {
+  padding: 8px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.skip-button {
+  padding: 8px 20px;
+  background-color: #ff5100;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+}
+
+.skip-button:hover {
+  background-color: #f82d26;
+}
+
+.gamebox{
+    margin-left: 20px;
+    width: 23%;
+    padding-top: 20px;
+}
