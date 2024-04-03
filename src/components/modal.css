@@ -5,7 +5,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 20px;
+    padding: 40px 100px;
     border-radius: 8px;
   }
   
@@ -20,4 +20,38 @@
     backdrop-filter: blur(4px); /* Apply blur effect to the background */
     z-index: 999; /* Ensure the modal appears above other content */
   }
-  
+  #ageTitle{
+    margin-bottom: 10px;
+    margin-left: 20px;
+  }
+  #confirmAge{
+    width: 20px;
+    height: 20px;
+  }
+  #ageque{
+    margin-left: 10px;
+  }
+  #confirm{
+    margin-left: 10px;
+  }
+  .verifyCon{
+    display:flex;
+  }
+  .verifybtn{
+    width: 80px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    margin-top: 10px;
+    margin-left: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    font-size: 18px;
+  }
+  #yebtn{
+    background-color: rgb(53, 121, 223);
+  }
+  #nobtn{
+    background-color: rgb(233, 80, 59);
+  }

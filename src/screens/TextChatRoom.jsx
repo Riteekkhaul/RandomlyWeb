@@ -4,8 +4,7 @@ import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
 import axios from "axios";
 import Navbar from "../components/NavBar";
-import TicTacToe from "../games/TicTacToe/TicTacToe";
-
+import Spinner from '../components/Spinner';
 import "../App.css";
 
 const RoomPage = () => {
@@ -17,6 +16,13 @@ const RoomPage = () => {
   const [gifList, setGifList] = useState([]);
   const [isGifModalVisible, setIsGifModalVisible] = useState(false);
 
+  function startsWithHttps(str) {
+    // Regular expression pattern to match "https" at the start of the string
+    const pattern = /^https/i; // Case-insensitive match
+  
+    // Test if the string matches the pattern
+    return pattern.test(str);
+  }
   useEffect(() => {
     // Listen for incoming messages
     socket.on("message", (message) => {
@@ -33,9 +39,46 @@ const RoomPage = () => {
     setMessage("");
   };
 
+  const searchTrendingGifs = async () => {
+    const options = {
+      method: "GET",
+      url: "https://api.giphy.com/v1/gifs/trending",
+      params: {
+        limit: 20,
+        api_key: process.env.REACT_APP_API_KEY,
+      },
+    };
+
+    try {
+      const response = await axios.request(options);
+      console.log(response.data.data);
+      setGifList(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleGifButtonClick = () => {
     setIsGifModalVisible(!isGifModalVisible); // Toggle the visibility of the GIF modal
+    searchTrendingGifs();
   };
+
+  const handleSendGIF = (e) => {
+  const gifSrc = e.target.src;
+  setMessage(gifSrc);
+  //handleSendMessage();
+}
+
+  // Function to execute when "Enter" key is pressed
+function handleKeyPress(event) {
+  if (event.key === "Enter") {
+    // Call your function here
+    handleSendMessage();
+  }
+}
+
+document.addEventListener("keydown", handleKeyPress);
+
 
   const handleUserJoined = useCallback((data) => {
     const { id } = data;
@@ -94,24 +137,37 @@ const RoomPage = () => {
                ×
             </button>
             <div className="gif">
-              {gifList.map((gif, index) => (
-                <div className="gif__image-container" key={index}>
+            {
+                (gifList.length !== 0)?(
+                  <>
+                  {gifList.map((gif, index) => (
+                <div className="gif__image-container" key={index}   >
                   <img
                     className="gif__image"
                     src={gif.images.fixed_height.url}
                     alt="gif"
                     height="80px"
                     width="80px"
+                    onClick={handleSendGIF}
                   />
                 </div>
               ))}
+              </>
+                ):(
+                  <div className="spinCon">
+                    <Spinner />
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>
         )
       }
 
-        <div className="chatSection">
+      {
+        remoteSocketId?(
+          <div className="chatSection">
           <div className="chat-container">
             <div className="chat-messages">
               {messages.map((message, index) => (
@@ -127,7 +183,9 @@ const RoomPage = () => {
                         ? "Stranger : "
                         : "You : "}
                     </b>
-                    {message.text}
+                    {
+                       startsWithHttps(message.text)?( <img src={message.text} height="70px" width="70px" /> ):( <span>{message.text}</span>   )
+                    }
                   </p>
                 </div>
               ))}
@@ -151,7 +209,10 @@ const RoomPage = () => {
             </button>
           </div>
         </div>
-
+        ):(
+        <Spinner />
+         )
+      }
       </div>
     </>
   );

@@ -1,9 +1,10 @@
 import React, { useEffect, useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactPlayer from "react-player";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
-import TicTacToe from "../games/TicTacToe/TicTacToe";
 import Navbar from "../components/NavBar";
+import Spinner from '../components/Spinner';
 import axios from "axios";
 import "../App.css";
 
@@ -19,7 +20,7 @@ const RoomPage = () => {
   const [isGifModalVisible, setIsGifModalVisible] = useState(false);
 
 
-  // chat code
+  const navigate = useNavigate();
 
   function startsWithHttps(str) {
     // Regular expression pattern to match "https" at the start of the string
@@ -60,13 +61,50 @@ const RoomPage = () => {
     }
   };
 
+  const searchTrendingGifs = async () => {
+    const options = {
+      method: "GET",
+      url: "https://api.giphy.com/v1/gifs/trending",
+      params: {
+        limit: 20,
+        api_key: process.env.REACT_APP_API_KEY,
+      },
+    };
+
+    try {
+      const response = await axios.request(options);
+      console.log(response.data.data);
+      setGifList(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleSendMessage = () => {
     socket.emit("sendMessage", { text: message }); // sending text message 
     setMessage("");
   };
 
+  const handleSendGIF = (e) => {
+    const gifSrc = e.target.src;
+    setMessage(gifSrc);
+    //handleSendMessage();
+  }
+
+  // Function to execute when "Enter" key is pressed
+// function handleKeyPress(event) {
+//   if (event.key === "Enter") {
+//     // Call your function here
+//     handleSendMessage();
+//   }
+// }
+
+// Add event listener to detect key press
+//document.addEventListener("keydown", handleKeyPress);
+
   const handleGifButtonClick = () => {
     setIsGifModalVisible(!isGifModalVisible); // Toggle the visibility of the GIF modal
+    searchTrendingGifs();
   };
 
   const handleUserJoined = useCallback((data) => {
@@ -104,6 +142,16 @@ const RoomPage = () => {
       peer.peer.addTrack(track, myStream);
     }
   }, [myStream]);
+
+  const handleSkipRoom = () => {
+    socket.emit('skipRoom'); // Emit an event to the server to skip the room
+  };
+
+  const handleExitConversation = () => {
+    // Logic to leave the room and exit conversation
+    socket.emit("exitConversation"); // Send a message to the server to handle user leaving the room
+    navigate('/');
+  }
 
   const handleCallAccepted = useCallback(
     ({ from, ans }) => {
@@ -181,9 +229,13 @@ const RoomPage = () => {
       <div className="container">
         <div className="left">
           <div className="row">
-            <h5>{remoteSocketId ? "Connected" : "No one in room"}</h5>
-            <button onClick={handleCallUser}>call</button>
-            {myStream && <button onClick={sendStreams}>Send Stream</button>}
+            {
+            remoteSocketId?(
+              <h4>Connected :  <button onClick={handleCallUser}>Start</button>  {myStream && <button onClick={sendStreams}>Send Video </button>} </h4>
+             ):(
+               <h4>Please Wait! We are connecting you to random User</h4>
+              )  
+            }
           </div>
 
           {myStream && (
@@ -212,8 +264,11 @@ const RoomPage = () => {
           )}
         </div>
 
+    {
+      remoteSocketId?(
         <div className="right">
           <div className="chat-container">
+            <div className="roomDetail"> <span>You are now Connected to a random User!</span> <button onClick={handleExitConversation} >Exit</button> </div>
             <div className="chat-messages">
               {messages.map((message, index) => (
                 <div
@@ -238,7 +293,7 @@ const RoomPage = () => {
           </div>
 
           <div className="input-container">
-            <button className="skip-button"> Skip </button>
+            <button className="skip-button" onClick={handleSkipRoom} > Skip </button>
             <input
               type="text"
               className="input-text"
@@ -255,6 +310,11 @@ const RoomPage = () => {
             </button>
           </div>
         </div>
+      ):(
+        <Spinner />
+      )
+    }
+        
 
         {
         isGifModalVisible &&(
@@ -272,7 +332,10 @@ const RoomPage = () => {
                ×
             </button>
             <div className="gif">
-              {gifList.map((gif, index) => (
+              {
+                (gifList.length !== 0)?(
+                  <>
+                  {gifList.map((gif, index) => (
                 <div className="gif__image-container" key={index}   >
                   <img
                     className="gif__image"
@@ -280,10 +343,18 @@ const RoomPage = () => {
                     alt="gif"
                     height="80px"
                     width="80px"
-                    onClick={(e) => {setMessage(e.target.src);  console.log(message)}}
+                    onClick={handleSendGIF}
                   />
                 </div>
               ))}
+              </>
+                ):(
+                  <div className="spinCon">
+                    <Spinner />
+                  </div>
+                )
+              }
+              
             </div>
         </div>
         )

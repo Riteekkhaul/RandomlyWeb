@@ -60,7 +60,26 @@
   border-radius: 10px;
   overflow: hidden;
 }
-
+.roomDetail{
+  width: 100%;
+  background-color: aquamarine;
+  padding: 5px;
+}
+.roomDetail span{
+  margin-left: 150px;
+}
+.roomDetail button{
+  margin-left: 100px;
+  width: 60px;
+  height: 30px;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  background-color: #f82d26;
+  cursor: pointer;
+}
 .chat-messages {
   height: 400px;
   overflow-y: auto;
@@ -172,7 +191,10 @@
   border-radius: 5px;
   cursor: pointer;
 }
-
+.spinCon{
+  margin-left: 130px;
+  margin-top: 50px;
+}
 
 .skip-button {
   padding: 8px 20px;

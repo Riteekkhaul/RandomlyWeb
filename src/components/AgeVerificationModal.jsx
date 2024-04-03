@@ -29,20 +29,20 @@ const AgeVerificationModal = () => {
       className="modal-content"
       overlayClassName="modal-overlay"
     >
-      <h2>Age Verification</h2>
-      <p>Are you 18 years old or older?</p>
-      <div>
+      <h2 id='ageTitle'>Age Verification</h2>
+      <p id='ageque'>Are you 18 years old or older?</p>
+      <div className='verifyCon'>
         <input
           type="checkbox"
           id="confirmAge"
           checked={isChecked}
           onChange={() => setIsChecked(!isChecked)}
         />
-        <label htmlFor="confirmAge">Yes, I am over 18 years old</label>
+        <label htmlFor="confirmAge"  id='confirm'>Yes, I am over 18 years old</label>
       </div>
       <div>
-        <button onClick={handleConfirm}>Yes</button>
-        <button onClick={handleDecline}>No</button>
+        <button className="verifybtn" id="yebtn" onClick={handleConfirm}>Yes</button>
+        <button className="verifybtn" id="nobtn" onClick={handleDecline}>No</button>
       </div>
     </Modal>
   );
