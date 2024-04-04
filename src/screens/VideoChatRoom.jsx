@@ -112,6 +112,12 @@ const RoomPage = () => {
     setRemoteSocketId(id);
   }, []);
 
+  
+  const handleUserLeft = useCallback(() => {
+    setRemoteSocketId(null);
+    setRemoteStream(null);
+  }, []);
+
   const handleCallUser = useCallback(async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
@@ -195,7 +201,9 @@ const RoomPage = () => {
   }, []);
 
   useEffect(() => {
+
     socket.on("user:joined", handleUserJoined);
+    socket.on("user:left", handleUserLeft);
     socket.on("incomming:call", handleIncommingCall);
     socket.on("call:accepted", handleCallAccepted);
     socket.on("peer:nego:needed", handleNegoNeedIncomming);
@@ -217,9 +225,9 @@ const RoomPage = () => {
     handleNegoNeedFinal,
   ]);
 
-  // useEffect(() => {
-  //   handleCallUser();
-  // }, [remoteSocketId]);
+  useEffect(() => {
+    handleCallUser();
+  }, [remoteSocketId]);
 
   return (
     <>
@@ -228,16 +236,6 @@ const RoomPage = () => {
       </div>
       <div className="container">
         <div className="left">
-          <div className="row">
-            {
-            remoteSocketId?(
-              <h4>Connected :  <button onClick={handleCallUser}>Start</button>  {myStream && <button onClick={sendStreams}>Send Video </button>} </h4>
-             ):(
-               <h4>Please Wait! We are connecting you to random User</h4>
-              )  
-            }
-          </div>
-
           {myStream && (
             <div className="stream-container">
               <ReactPlayer
@@ -250,38 +248,44 @@ const RoomPage = () => {
               />
             </div>
           )}
-          {remoteStream && (
             <div className="stream-container">
+            {remoteStream? (
               <ReactPlayer
                 className="video-stream"
                 playing
-                muted
-                height="450px"
-                width="620px"
+               
+                height="470px"
+                width="640px"
                 url={remoteStream}
               />
+              ):(
+                <div className="tempFrame">
+                  <Spinner />
+                </div>
+              )}
             </div>
-          )}
         </div>
 
-    {
-      remoteSocketId?(
         <div className="right">
           <div className="chat-container">
-            <div className="roomDetail"> <span>You are now Connected to a random User!</span> <button onClick={handleExitConversation} >Exit</button> </div>
+            <div className="roomDetail"> 
+               {
+                 remoteSocketId?(
+                 <> <span>You are now Connected to a random User!</span> <button onClick={handleExitConversation} >Exit</button></>
+                 ):(
+                  <span>Please Wait! We are connecting you to random User...</span>
+                 )
+               }
+            </div>
             <div className="chat-messages">
               {messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`message ${
-                    message.user === remoteSocketId ? "received" : "sent" //{message.user}
-                  }`}
+                  className={`message ${message.user === "admin" ? "admin" : message.user === remoteSocketId ? "received" : "sent"}`}
                 >
                   <p className="message-text">
                     <b>
-                      {remoteSocketId === message.user
-                        ? "Stranger : "
-                        : "You : "}
+                    {message.user === "admin" ? "admin : " : remoteSocketId === message.user ? "Stranger : " : "You : "}
                     </b>
                     {
                        startsWithHttps(message.text)?( <img src={message.text} height="70px" width="70px" /> ):( <span>{message.text}</span>   )
@@ -310,12 +314,7 @@ const RoomPage = () => {
             </button>
           </div>
         </div>
-      ):(
-        <Spinner />
-      )
-    }
-        
-
+    
         {
         isGifModalVisible &&(
           <div className="gifModal">

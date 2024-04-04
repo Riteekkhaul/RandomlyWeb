@@ -49,13 +49,14 @@
   color:  #ffffff; /* blue text color */
   font-size: 24px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease-in-out;
 }
 
 .text-chat-button:hover,
 .video-chat-button:hover {
   background-color: #ffffff ;/* blue background on hover */
   color:#007bff; /* white text color on hover */
+  transform: scale(1.1);
 }
 
 .marqueeStyle{

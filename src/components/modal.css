@@ -7,8 +7,23 @@
     background-color: white;
     padding: 40px 100px;
     border-radius: 8px;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: modal-drop 0.5s ease forwards;
   }
   
+  @keyframes modal-drop {
+    /* Start from above the viewport */
+    from {
+      transform: translateY(-100%);
+    }
+    /* Drop down to the middle of the viewport */
+    to {
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
   /* Modal Overlay Styles */
   .modal-overlay {
     position: fixed;
@@ -48,7 +63,13 @@
     cursor: pointer;
     color: white;
     font-size: 18px;
+    transition: transform 0.3s ease-in-out;
   }
+
+  .verifybtn:hover {
+    transform: scale(1.1); /* Scale the button to 110% of its original size */
+  }
+
   #yebtn{
     background-color: rgb(53, 121, 223);
   }
