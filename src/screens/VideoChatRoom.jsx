@@ -163,7 +163,7 @@ const RoomPage = () => {
     ({ from, ans }) => {
       peer.setLocalDescription(ans);
       console.log("Call Accepted!");
-      sendStreams();
+    //  sendStreams();
     },
     [sendStreams]
   );
@@ -236,6 +236,17 @@ const RoomPage = () => {
       </div>
       <div className="container">
         <div className="left">
+
+        <div className="row">
+            {
+            remoteSocketId && (
+              <> 
+                {myStream && <button onClick={sendStreams}>Send Video </button>} 
+              </>
+             ) 
+            }
+          </div>
+
           {myStream && (
             <div className="stream-container">
               <ReactPlayer
