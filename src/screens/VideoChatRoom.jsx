@@ -6,6 +6,7 @@ import { useSocket } from "../context/SocketProvider";
 import Navbar from "../components/NavBar";
 import Spinner from '../components/Spinner';
 import axios from "axios";
+import VideoPermissionModal from "react-modal";
 import "../App.css";
 
 const RoomPage = () => {
@@ -18,6 +19,8 @@ const RoomPage = () => {
   const [query, setQuery] = useState("");
   const [gifList, setGifList] = useState([]);
   const [isGifModalVisible, setIsGifModalVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(true); // Open by default
+  const [darkMode, setDarkMode] = useState(false);
 
 
   const navigate = useNavigate();
@@ -80,6 +83,10 @@ const RoomPage = () => {
     }
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode((prevDarkMode) => !prevDarkMode);
+  };
+
   const handleSendMessage = () => {
     socket.emit("sendMessage", { text: message }); // sending text message 
     setMessage("");
@@ -88,19 +95,17 @@ const RoomPage = () => {
   const handleSendGIF = (e) => {
     const gifSrc = e.target.src;
     setMessage(gifSrc);
-    //handleSendMessage();
+   if(message){
+    handleSendMessage();
+   }
   }
 
   // Function to execute when "Enter" key is pressed
-// function handleKeyPress(event) {
-//   if (event.key === "Enter") {
-//     // Call your function here
-//     handleSendMessage();
-//   }
-// }
-
-// Add event listener to detect key press
-//document.addEventListener("keydown", handleKeyPress);
+const handleKeyPress = (event) => {
+  if (event.key === 'Enter') {
+    handleSendMessage();
+  }
+};
 
   const handleGifButtonClick = () => {
     setIsGifModalVisible(!isGifModalVisible); // Toggle the visibility of the GIF modal
@@ -147,11 +152,20 @@ const RoomPage = () => {
     for (const track of myStream.getTracks()) {
       peer.peer.addTrack(track, myStream);
     }
+    setIsOpen(false); // close Permission Modal
   }, [myStream]);
 
   const handleSkipRoom = () => {
     socket.emit('skipRoom'); // Emit an event to the server to skip the room
   };
+
+  const handleSkipNavigate=useCallback(
+    (data) => {
+      const { roomName } = data;
+        navigate(`/room/video/${roomName}`);
+    },
+    [navigate]
+  );
 
   const handleExitConversation = () => {
     // Logic to leave the room and exit conversation
@@ -163,7 +177,7 @@ const RoomPage = () => {
     ({ from, ans }) => {
       peer.setLocalDescription(ans);
       console.log("Call Accepted!");
-    //  sendStreams();
+      //sendStreams();
     },
     [sendStreams]
   );
@@ -204,6 +218,7 @@ const RoomPage = () => {
 
     socket.on("user:joined", handleUserJoined);
     socket.on("user:left", handleUserLeft);
+    socket.on("room:skip:join", handleSkipNavigate);
     socket.on("incomming:call", handleIncommingCall);
     socket.on("call:accepted", handleCallAccepted);
     socket.on("peer:nego:needed", handleNegoNeedIncomming);
@@ -232,16 +247,28 @@ const RoomPage = () => {
   return (
     <>
       <div className="navBar">
-       <Navbar />
+       <Navbar handleDarkMode={toggleDarkMode} />
       </div>
-      <div className="container">
+      <div className={`${darkMode ? "container darkMode " : "container"}`}>
         <div className="left">
 
         <div className="row">
             {
             remoteSocketId && (
               <> 
-                {myStream && <button onClick={sendStreams}>Send Video </button>} 
+                {myStream && (
+                  <VideoPermissionModal
+                  isOpen={isOpen}
+                  onRequestClose={() => setIsOpen(false)}
+                  contentLabel="Permission Required"
+                  shouldCloseOnOverlayClick={false} // Prevent closing on overlay click
+                  className="modal-content"
+                  overlayClassName="modal-overlay"
+                >
+                  <p>Please Allow to send Your Video </p>
+                  <button id="allow" onClick={sendStreams}>Allow</button>
+                </VideoPermissionModal>
+                ) } 
               </>
              ) 
             }
@@ -315,6 +342,7 @@ const RoomPage = () => {
               placeholder="Type your message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyPress}
             />
              <button className="gifbtn" onClick={handleGifButtonClick}>
               GIF

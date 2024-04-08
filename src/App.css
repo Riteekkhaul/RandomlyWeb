@@ -4,11 +4,25 @@
   display: flex;
   flex-direction: row;
 }
+.darkMode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  margin: 20px;
+}
 .row{
   display: flex;
   flex-direction: row;
 }
-
+#allow{
+  padding: 10px;
+  outline: none;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  background-color: #007bff;
+  cursor: pointer;
+}
 .row button{
   width: 100px;
   height: 20px;

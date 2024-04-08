@@ -58,6 +58,13 @@ const RoomPage = () => {
     }
   };
 
+  // Function to execute when "Enter" key is pressed
+const handleKeyPress = (event) => {
+  if (event.key === 'Enter') {
+    handleSendMessage();
+  }
+};
+
   const handleGifButtonClick = () => {
     setIsGifModalVisible(!isGifModalVisible); // Toggle the visibility of the GIF modal
     searchTrendingGifs();
@@ -68,17 +75,6 @@ const RoomPage = () => {
   setMessage(gifSrc);
   //handleSendMessage();
 }
-
-  // Function to execute when "Enter" key is pressed
-function handleKeyPress(event) {
-  if (event.key === "Enter") {
-    // Call your function here
-    handleSendMessage();
-  }
-}
-
-document.addEventListener("keydown", handleKeyPress);
-
 
   const handleUserJoined = useCallback((data) => {
     const { id } = data;
@@ -199,6 +195,7 @@ document.addEventListener("keydown", handleKeyPress);
               placeholder="Type your message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyPress}
             />
             <button className="gifbtn" onClick={handleGifButtonClick}>
               GIF

@@ -1,7 +1,12 @@
 import React from 'react';
 import './navbar.css'; // Import CSS file for styling
 
-const Navbar = () => {
+const Navbar = ({ handleDarkMode }) => {
+
+  const handleClick = () => {
+    handleDarkMode(); // Call the handleDarkMode function when the button is clicked
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-logo">Randomly</div>
@@ -11,7 +16,7 @@ const Navbar = () => {
         <li className="navbar-item"><a href="#feedback">Feedback</a></li>
         <li className="navbar-item"><a href="#report">Report an Issue</a></li>
       </ul>
-      <div className="navbar-switch">Night Mode
+      <div className="navbar-switch"  onClick={handleClick} >Dark Mode
         <label className="switch">
           <input type="checkbox" />
           <span className="slider round"></span>
