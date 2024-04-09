@@ -83,3 +83,16 @@ input:focus + .slider {
 input:checked + .slider:before {
   transform: translateX(26px);
 }
+
+
+/* Media query for smartphones */
+@media only screen and (max-width: 767px) {
+  /* Styles for smartphones */
+.navbar{
+  width: 100%;
+}
+.navbar-menu{
+  display: none;
+}
+
+}

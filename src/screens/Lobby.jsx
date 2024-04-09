@@ -63,7 +63,7 @@ const LobbyScreen = () => {
   }, [socket, handleJoinRoom]);
 
   return (
-    <div>
+    <>
       <div>
         <Navbar />
         <div className="homepage">
@@ -112,6 +112,7 @@ const LobbyScreen = () => {
                 Text <br /> Chat{" "}
               </p>
             </button>
+            <p className="or">or</p>
             <button
               className="video-chat-button"
               onClick={handleVideoChatClick}
@@ -128,12 +129,17 @@ const LobbyScreen = () => {
             </button>
           </div>
 
-          <div className="serviceSection"> For Extra Services  </div>
-          <div className="footer" > Footer  </div>
+          <div className="serviceSection">  </div>
+          <div className="footer" > 
+            <button className="footerbtn" >Contact</button>
+            <button className="footerbtn" >Services</button>
+            <button className="footerbtn" >Feedback</button>
+            <button className="footerbtn" >Report an Issue</button>
+          </div>
         </div>
       </div>
       <AgeVerificationModal />
-    </div>
+    </>
   );
 };
 

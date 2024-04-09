@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState,useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPlayer from "react-player";
 import peer from "../service/peer";
@@ -7,10 +7,12 @@ import Navbar from "../components/NavBar";
 import Spinner from '../components/Spinner';
 import axios from "axios";
 import VideoPermissionModal from "react-modal";
+import { useDarkMode } from '../context/DarkModeContext';
 import "../App.css";
 
 const RoomPage = () => {
   const socket = useSocket();
+  const { darkMode, toggleDarkMode } = useDarkMode();
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
@@ -20,8 +22,16 @@ const RoomPage = () => {
   const [gifList, setGifList] = useState([]);
   const [isGifModalVisible, setIsGifModalVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(true); // Open by default
-  const [darkMode, setDarkMode] = useState(false);
+  const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
+  const videoWidth = deviceWidth <= 767 ? '325px' : '640px';
+  const videoHeight = deviceWidth <= 767 ? '280px' : '470px';
+  const MyvideoWidth = deviceWidth <= 767 ? '320px' : '150px';
+  const MyvideoHeight = deviceWidth <= 767 ? '280px' : '100px';
+
+
+  const messagesEndRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -33,12 +43,20 @@ const RoomPage = () => {
     return pattern.test(str);
   }
 
+  const showChat = () => {
+    setIsChatVisible(true);
+  };
+
+  const hideChat = () => {
+    setIsChatVisible(false);
+  };
+
   useEffect(() => {
     // Listen for incoming messages
     socket.on("message", (message) => {
       setMessages([...messages, message]);
     });
-
+    scrollToBottom();
     return () => {
       socket.off("message");
     };
@@ -81,10 +99,6 @@ const RoomPage = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const toggleDarkMode = () => {
-    setDarkMode((prevDarkMode) => !prevDarkMode);
   };
 
   const handleSendMessage = () => {
@@ -167,6 +181,11 @@ const handleKeyPress = (event) => {
     [navigate]
   );
 
+   // Function to handle incoming remote stream
+   const handleRemoteStream = (stream) => {
+    setIsOpen(true);
+  };
+
   const handleExitConversation = () => {
     // Logic to leave the room and exit conversation
     socket.emit("exitConversation"); // Send a message to the server to handle user leaving the room
@@ -177,7 +196,7 @@ const handleKeyPress = (event) => {
     ({ from, ans }) => {
       peer.setLocalDescription(ans);
       console.log("Call Accepted!");
-      //sendStreams();
+    //  sendStreams();
     },
     [sendStreams]
   );
@@ -214,11 +233,16 @@ const handleKeyPress = (event) => {
     });
   }, []);
 
+   const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
 
     socket.on("user:joined", handleUserJoined);
     socket.on("user:left", handleUserLeft);
     socket.on("room:skip:join", handleSkipNavigate);
+    socket.on('remoteStream', handleRemoteStream);
     socket.on("incomming:call", handleIncommingCall);
     socket.on("call:accepted", handleCallAccepted);
     socket.on("peer:nego:needed", handleNegoNeedIncomming);
@@ -226,6 +250,7 @@ const handleKeyPress = (event) => {
 
     return () => {
       socket.off("user:joined", handleUserJoined);
+      socket.off('remoteStream', handleRemoteStream);
       socket.off("incomming:call", handleIncommingCall);
       socket.off("call:accepted", handleCallAccepted);
       socket.off("peer:nego:needed", handleNegoNeedIncomming);
@@ -244,13 +269,26 @@ const handleKeyPress = (event) => {
     handleCallUser();
   }, [remoteSocketId]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setDeviceWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   return (
     <>
       <div className="navBar">
-       <Navbar handleDarkMode={toggleDarkMode} />
+       <Navbar />
       </div>
-      <div className={`${darkMode ? "container darkMode " : "container"}`}>
-        <div className="left">
+      <div className="container">
+        <div className={`${darkMode ? "left darkMode " : "left"}`} >
 
         <div className="row">
             {
@@ -274,26 +312,13 @@ const handleKeyPress = (event) => {
             }
           </div>
 
-          {myStream && (
-            <div className="stream-container">
-              <ReactPlayer
-                className="video-stream local-stream"
-                playing
-                muted
-                height="100px"
-                width="150px"
-                url={myStream}
-              />
-            </div>
-          )}
             <div className="stream-container">
             {remoteStream? (
               <ReactPlayer
                 className="video-stream"
                 playing
-               
-                height="470px"
-                width="640px"
+                height={videoHeight}
+                width={videoWidth}
                 url={remoteStream}
               />
               ):(
@@ -302,10 +327,24 @@ const handleKeyPress = (event) => {
                 </div>
               )}
             </div>
+
+            {myStream && (
+            <div className="stream-container">
+              <ReactPlayer
+                className="video-stream local-stream"
+                playing
+                muted
+                height={MyvideoHeight}
+                width={MyvideoWidth}
+                url={myStream}
+                onClick={hideChat}
+              />
+            </div>
+          )}
         </div>
 
-        <div className="right">
-          <div className="chat-container">
+        <div className={`${darkMode ? "right darkMode " : "right"}`} >
+          <div className={`chat-container ${isChatVisible ? '' : 'hide'}`}>
             <div className="roomDetail"> 
                {
                  remoteSocketId?(
@@ -331,6 +370,7 @@ const handleKeyPress = (event) => {
                   </p>
                 </div>
               ))}
+               <div ref={messagesEndRef} />
             </div>
           </div>
 
@@ -353,7 +393,7 @@ const handleKeyPress = (event) => {
             </button>
           </div>
         </div>
-    
+        
         {
         isGifModalVisible &&(
           <div className="gifModal">
@@ -397,7 +437,9 @@ const handleKeyPress = (event) => {
         </div>
         )
       }
-
+      {
+        (deviceWidth <= 767)&&(<div className="openChat" onClick={showChat} ></div>)
+      }
       </div>
     </>
   );

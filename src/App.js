@@ -5,9 +5,12 @@ import RoomPage from "./screens/Room";
 import TextChatRoom from './screens/TextChatRoom';
 import VideoChatRoom from './screens/VideoChatRoom';
 import TicTacToe from "./games/TicTacToe/TicTacToe";
+import { DarkModeProvider } from './context/DarkModeContext';
+
 
 function App() {
   return (
+    <DarkModeProvider>
     <div className="App">
       <Routes>
         <Route path="/" element={<LobbyScreen />} />
@@ -16,6 +19,7 @@ function App() {
         <Route path="/game/tictactoe" element={<TicTacToe />} />
       </Routes>
     </div>
+    </DarkModeProvider>
   );
 }
 
