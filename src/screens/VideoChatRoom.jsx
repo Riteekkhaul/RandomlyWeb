@@ -23,12 +23,11 @@ const RoomPage = () => {
   const [isGifModalVisible, setIsGifModalVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(true); // Open by default
   const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
-  const [isChatVisible, setIsChatVisible] = useState(false);
 
-  const videoWidth = deviceWidth <= 767 ? '325px' : '640px';
-  const videoHeight = deviceWidth <= 767 ? '280px' : '470px';
-  const MyvideoWidth = deviceWidth <= 767 ? '320px' : '150px';
-  const MyvideoHeight = deviceWidth <= 767 ? '280px' : '100px';
+  const videoWidth = deviceWidth <= 1080 ? deviceWidth : '640px';
+  const videoHeight = deviceWidth <= 1080 ? '280px' : '470px';
+  const MyvideoWidth = deviceWidth <= 1080 ? '150px' : '150px';
+  const MyvideoHeight = deviceWidth <= 1080 ? '100px' : '100px';
 
 
   const messagesEndRef = useRef(null);
@@ -42,14 +41,6 @@ const RoomPage = () => {
     // Test if the string matches the pattern
     return pattern.test(str);
   }
-
-  const showChat = () => {
-    setIsChatVisible(true);
-  };
-
-  const hideChat = () => {
-    setIsChatVisible(false);
-  };
 
   useEffect(() => {
     // Listen for incoming messages
@@ -281,9 +272,8 @@ const handleKeyPress = (event) => {
     };
   }, []);
 
-
   return (
-    <>
+    <div className="mainCon">
       <div className="navBar">
        <Navbar />
       </div>
@@ -337,14 +327,13 @@ const handleKeyPress = (event) => {
                 height={MyvideoHeight}
                 width={MyvideoWidth}
                 url={myStream}
-                onClick={hideChat}
               />
             </div>
           )}
         </div>
 
         <div className={`${darkMode ? "right darkMode " : "right"}`} >
-          <div className={`chat-container ${isChatVisible ? '' : 'hide'}`}>
+          <div className="chat-container">
             <div className="roomDetail"> 
                {
                  remoteSocketId?(
@@ -437,11 +426,9 @@ const handleKeyPress = (event) => {
         </div>
         )
       }
-      {
-        (deviceWidth <= 767)&&(<div className="openChat" onClick={showChat} ></div>)
-      }
+      
       </div>
-    </>
+    </div>
   );
 };
 

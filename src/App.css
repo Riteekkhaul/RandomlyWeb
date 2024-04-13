@@ -1,4 +1,4 @@
-* {
+.mainCon{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -230,36 +230,32 @@
 .skip-button:hover {
   background-color: #f82d26;
 }
-.gamebox{
-    margin-left: 20px;
-    width: 23%;
-    padding-top: 20px;
-}
 
 /* Media query for smartphones */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 1080px) {
   /* Styles for smartphones */
   .container {
     display: flex;
     flex-direction: column;
   }
   .stream-container {
-    margin: 0px; /* Add margin for spacing */
+    margin: 0; /* Add margin for spacing */
   }
   .video-stream {
     width: 100%;
-    height:280px;
+    height:auto;
     margin-left: 0px;
-    margin-top: 0px;
+    margin-top: 5px;
     box-shadow: none;
     transition: none;
   }
   .local-stream {
     position: relative;
     border-radius: 8px;
-    left: 2px;
+    left: 65%;
     top: 15%;
-    margin-top: 12px;
+    margin-top: 50px;
+    height:100px;
   }
   .left {
     width: 100%;
@@ -269,7 +265,7 @@
     padding-top: 0px;
   }
   .tempFrame{
-    height:240px;
+    height:280px;
     width:90%;
     border-radius: 8px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
@@ -281,10 +277,10 @@
     align-items: center; /* Center content vertically */
   }
   .chat-container {
-    position:absolute;
-    margin: 0px 1px ;
+    position:relative;
+    margin: auto;
     height: 250px;
-    bottom: 105px;
+    bottom: 10px;
     border: 2px solid #ccc;
     border-radius: 10px;
     overflow: hidden;
@@ -344,10 +340,9 @@
   }
   .gifModal{
     position: absolute;
-    width: 85%;
+    width: 80%;
     margin: auto;
-    left: 1px;
-    bottom: 140px;
+    bottom: 10px;
     z-index: 99;
   }
 .queryInput{
@@ -373,23 +368,5 @@
   left: 5%;
   width: 90%;
   padding: 10px 10px;
-}
-.hide{
-  display: none;
-}
-.openChat{
-  background-image: url('../src/images/message.png'); /* Replace 'your-photo-url.jpg' with the URL of your photo */
-  background-size: cover; /* Cover the entire background */
-  background-position: center; /* Center the background */
-  background-repeat: no-repeat; /* Do not repeat the background */
-  width: 50px;
-  height: 50px;
-  border: none;
-  outline: none;
-  color: white;
-  border-radius: 8px 8px 8px 0px;
-  position: absolute;
-  bottom: 115px;
-  right: 35px;
 }
 }
